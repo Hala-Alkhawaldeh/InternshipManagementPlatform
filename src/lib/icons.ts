@@ -1,0 +1,25 @@
+// Deep imports instead of `from 'lucide-vue-next'` — the package's barrel file does
+// `import * as index from './icons/index.js'; export { index as icons }`, which defeats
+// Rollup's tree-shaking and pulls in the entire ~1600-icon set (see bundle-stats.html).
+// Import icons from here instead of 'lucide-vue-next' directly.
+export { default as Menu } from 'lucide-vue-next/dist/esm/icons/menu.js'
+export { default as Calendar } from 'lucide-vue-next/dist/esm/icons/calendar.js'
+export { default as X } from 'lucide-vue-next/dist/esm/icons/x.js'
+export { default as Clock } from 'lucide-vue-next/dist/esm/icons/clock.js'
+export { default as AlignLeft } from 'lucide-vue-next/dist/esm/icons/align-left.js'
+export { default as LayoutDashboard } from 'lucide-vue-next/dist/esm/icons/layout-dashboard.js'
+export { default as Users } from 'lucide-vue-next/dist/esm/icons/users.js'
+export { default as GraduationCap } from 'lucide-vue-next/dist/esm/icons/graduation-cap.js'
+export { default as CheckSquare } from 'lucide-vue-next/dist/esm/icons/square-check-big.js'
+export { default as ClipboardList } from 'lucide-vue-next/dist/esm/icons/clipboard-list.js'
+export { default as ChevronLeft } from 'lucide-vue-next/dist/esm/icons/chevron-left.js'
+export { default as LogOut } from 'lucide-vue-next/dist/esm/icons/log-out.js'
+export { default as Plus } from 'lucide-vue-next/dist/esm/icons/plus.js'
+export { default as ArrowLeft } from 'lucide-vue-next/dist/esm/icons/arrow-left.js'
+export { default as AlertCircle } from 'lucide-vue-next/dist/esm/icons/circle-alert.js'
+export { default as Eye } from 'lucide-vue-next/dist/esm/icons/eye.js'
+export { default as EyeOff } from 'lucide-vue-next/dist/esm/icons/eye-off.js'
+export { default as ChevronDown } from 'lucide-vue-next/dist/esm/icons/chevron-down.js'
+export { default as Trash2 } from 'lucide-vue-next/dist/esm/icons/trash-2.js'
+export { default as ChevronUp } from 'lucide-vue-next/dist/esm/icons/chevron-up.js'
+export { default as ChevronRight } from 'lucide-vue-next/dist/esm/icons/chevron-right.js'

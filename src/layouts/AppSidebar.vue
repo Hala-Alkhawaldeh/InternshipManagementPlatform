@@ -9,7 +9,7 @@ import {
   ClipboardList,
   ChevronLeft,
   LogOut,
-} from 'lucide-vue-next'
+} from '@/lib/icons'
 import type { Component } from 'vue'
 import { useAuthStore } from '@/stores/auth.store'
 import { useAuth } from '@/composables/useAuth'

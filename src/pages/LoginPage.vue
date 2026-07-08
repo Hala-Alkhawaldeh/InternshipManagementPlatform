@@ -44,7 +44,7 @@ async function quickLogin(account: { email: string }) {
       <!-- Brand mark — animates in first -->
       <div class="brand-mark flex items-center gap-3 mb-8 justify-center">
         <div
-          class="w-10 h-10 rounded-xl bg-indigo-500 flex items-center justify-center shadow-lg"
+          class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg"
           style="box-shadow: 0 0 20px rgba(99,102,241,0.35)"
         >
           <span class="text-white font-bold font-mono text-sm leading-none">SI</span>
@@ -62,7 +62,7 @@ async function quickLogin(account: { email: string }) {
           <h1 class="text-gray-900 text-[22px] font-semibold tracking-tight leading-tight">
             Welcome back
           </h1>
-          <p class="text-gray-400 text-sm mt-1.5 leading-relaxed">
+          <p class="text-gray-500 text-sm mt-1.5 leading-relaxed">
             Sign in to your Sitech account to continue
           </p>
         </div>
@@ -73,7 +73,7 @@ async function quickLogin(account: { email: string }) {
           <div>
             <label
               for="email"
-              class="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-2"
+              class="block text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2"
             >
               Email
             </label>
@@ -92,7 +92,7 @@ async function quickLogin(account: { email: string }) {
           <div>
             <label
               for="password"
-              class="block text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-2"
+              class="block text-[11px] font-semibold text-gray-500 uppercase tracking-widest mb-2"
             >
               Password
             </label>

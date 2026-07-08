@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Menu } from 'lucide-vue-next'
+import { Menu } from '@/lib/icons'
 import AppSidebar from './AppSidebar.vue'
 
 const isMobileOpen = ref(false)

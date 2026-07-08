@@ -21,5 +21,6 @@ export default defineConfig({
     // 155KB gzipped is acceptable for internal tool with 30 users.
     // Page components are already split into separate lazy chunks.
     chunkSizeWarningLimit: 600,
+    sourcemap: true,
   },
 })

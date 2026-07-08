@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import { useAutoAnimate } from '@formkit/auto-animate/vue'
-import { CheckSquare } from 'lucide-vue-next'
+import { CheckSquare } from '@/lib/icons'
 import TaskCard from '@/components/tasks/TaskCard.vue'
 import ProgressRing from '@/components/ui/ProgressRing.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
