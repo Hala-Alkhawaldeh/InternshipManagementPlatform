@@ -83,3 +83,9 @@ development_status:
   5-4-empty-states: done
   5-5-toast-notification-system: done
   epic-5-retrospective: optional
+
+  # ── Epic 6: AI-Assisted Task Planning (added 2026-07-06 via correct-course) ──
+  epic-6: in-progress
+  6-1-supabase-edge-function-generate-task-plan: ready-for-dev
+  6-2-mentor-generate-plan-button-editable-prefill: backlog
+  epic-6-retrospective: optional

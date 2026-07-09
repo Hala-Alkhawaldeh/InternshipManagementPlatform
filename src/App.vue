@@ -1,13 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import Toast from 'primevue/toast'
-import { useAuth } from '@/composables/useAuth'
-
-const { initAuth } = useAuth()
-
-onMounted(async () => {
-  await initAuth()
-})
 </script>
 
 <template>

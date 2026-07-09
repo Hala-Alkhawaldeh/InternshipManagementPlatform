@@ -63,14 +63,5 @@ export function useAuth() {
     return result
   }
 
-  // Call once in App.vue on mount to restore session across page refreshes
-  async function initAuth() {
-    const { data } = await authService.getSession()
-    if (data.session) {
-      authStore.setSession(data.session)
-      await fetchMyProfile()
-    }
-  }
-
-  return { login, logout, fetchMyProfile, initAuth, loading }
+  return { login, logout, fetchMyProfile, loading }
 }

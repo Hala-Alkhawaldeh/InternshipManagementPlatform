@@ -4,6 +4,11 @@ import { useToast } from '@/composables/useToast'
 import { evaluationsService } from '@/services/evaluations.service'
 import type { Evaluation, EvaluationCriterion, EvaluationScore } from '@/types/app.types'
 
+// Module-level (not inside the composable) so every useEvaluations() caller shares
+// one cache instead of re-fetching the same rarely-changing criteria list per component.
+const CRITERIA_TTL_MS = 5 * 60 * 1000
+let criteriaCache: { data: EvaluationCriterion[]; expiresAt: number } | null = null
+
 export function useEvaluations() {
   const { execute, loading } = useApi()
   const { toast } = useToast()
@@ -13,10 +18,20 @@ export function useEvaluations() {
   const criteria = ref<EvaluationCriterion[]>([])
 
   // ── Criteria ─────────────────────────────────────────────────
+  // Read often (every evaluations page load), changes rarely (admin edits it
+  // occasionally) — a good, low-risk cache candidate, unlike task/progress data.
 
-  async function fetchCriteria() {
+  async function fetchCriteria(force = false) {
+    if (!force && criteriaCache && criteriaCache.expiresAt > Date.now()) {
+      criteria.value = criteriaCache.data
+      return { data: criteriaCache.data, error: null }
+    }
+
     const result = await evaluationsService.getCriteria()
-    if (result.data) criteria.value = result.data
+    if (result.data) {
+      criteria.value = result.data
+      criteriaCache = { data: result.data, expiresAt: Date.now() + CRITERIA_TTL_MS }
+    }
     return result
   }
 
@@ -24,6 +39,7 @@ export function useEvaluations() {
     const result = await execute(() => evaluationsService.upsertCriteria(updated))
     if (!result.error) {
       criteria.value = updated
+      criteriaCache = { data: updated, expiresAt: Date.now() + CRITERIA_TTL_MS }
       toast({ title: 'Criteria saved' })
     }
     return result

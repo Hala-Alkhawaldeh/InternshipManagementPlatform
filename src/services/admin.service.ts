@@ -5,10 +5,16 @@ import type { Track } from '@/enums/tracks.enum'
 
 // Creating auth users requires signUp, which only works with email confirmation
 // disabled. We use a throw-away client so the admin's session is never affected.
+// persistSession/autoRefreshToken must stay off — otherwise this client writes
+// the new user's session into the same localStorage key as the main app client
+// (same project URL, no custom storageKey), which can silently swap the admin's
+// session for the new user's on the next storage sync and break the RLS check
+// on the profile insert below.
 function tempClient() {
   return createClient(
     import.meta.env.VITE_SUPABASE_URL as string,
     import.meta.env.VITE_SUPABASE_ANON_KEY as string,
+    { auth: { persistSession: false, autoRefreshToken: false } },
   )
 }
 

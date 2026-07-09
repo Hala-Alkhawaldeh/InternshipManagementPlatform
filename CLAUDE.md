@@ -137,7 +137,7 @@ Key scripts:
 ---
 
 ## MCP Integrations (Configured)
-Both MCPs are configured in `.claude/settings.json`.
+All MCPs are configured in `.mcp.json` at the project root (**not** `.claude/settings.json` — that was a real bug: all three sat unused there for the whole project history because Claude Code only reads project-scoped MCP servers from `.mcp.json`, corrected 2026-07-08). After any change to `.mcp.json`, restart the Claude Code session, then run `/mcp` to confirm each server shows `✓ Connected` — don't assume "configured" means "connected."
 
 ### Supabase MCP
 - Package: `@supabase/mcp-server-supabase`
@@ -148,6 +148,12 @@ Both MCPs are configured in `.claude/settings.json`.
 ### Lighthouse MCP
 - Package: `lighthouse-mcp`
 - Use for: performance audits, accessibility scores, best practices checks on running app
+- Run against: `localhost:5173` (Vue dev server default)
+
+### Playwright MCP
+- Package: `@playwright/mcp`
+- Use for: driving a real browser against the running dev server — clicking through login/task-status flows, verifying mobile responsiveness (see `feedback_check_mobile_view` memory), screenshotting UI states
+- Swapped in 2026-07-08 to replace the filesystem MCP (removed — it was redundant with native Read/Write/Edit/Glob/Grep)
 - Run against: `localhost:5173` (Vue dev server default)
 
 ---
@@ -174,14 +180,11 @@ Using BMad methodology to plan and build the platform.
 - **Cohort-based:** fixed intake, not rolling
 - **Announcement:** after Eid break (2026)
 
-### Technical Tracks (7)
+### Technical Tracks (4)
 1. Frontend Development (Vue.js / JS / TS / HTML / CSS / SCSS / Git)
-2. DevOps Basics
-3. Python
-4. Quality Assurance (QA)
-5. TypeScript (Advanced Topics)
-6. Performance Engineering
-7. Security
+2. Backend Development
+3. Quality Assurance (QA)
+4. DevOps
 
 ---
 

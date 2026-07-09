@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { Plus, Users, GraduationCap, Eye, EyeOff, ChevronDown } from 'lucide-vue-next'
+import { Plus, Users, GraduationCap, Eye, EyeOff, ChevronDown } from '@/lib/icons'
 import { useProfiles } from '@/composables/useProfiles'
 import { useApi } from '@/composables/useApi'
 import { adminService } from '@/services/admin.service'
@@ -124,12 +124,9 @@ function initials(name: string) {
 
 const trackHex: Record<Track, string> = {
   [Track.Frontend]: '#6366f1',
-  [Track.DevOps]: '#f97316',
-  [Track.Python]: '#ca8a04',
+  [Track.Backend]: '#3b82f6',
   [Track.QA]: '#0d9488',
-  [Track.TypeScript]: '#3b82f6',
-  [Track.Performance]: '#a855f7',
-  [Track.Security]: '#ef4444',
+  [Track.DevOps]: '#f97316',
 }
 
 function avatarBg(profile: Profile) {
@@ -304,10 +301,9 @@ function avatarBg(profile: Profile) {
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ── ADD MENTOR DIALOG ──────────────────────────────────── -->
-  <Teleport to="body">
+    <!-- ── ADD MENTOR DIALOG ──────────────────────────────────── -->
+    <Teleport to="body">
     <Transition name="dialog-backdrop">
       <div
         v-if="showAddMentor"
@@ -417,6 +413,7 @@ function avatarBg(profile: Profile) {
       </div>
     </Transition>
   </Teleport>
+  </div>
 </template>
 
 <style scoped>

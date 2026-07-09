@@ -526,7 +526,33 @@ USING (get_my_role() = 'admin');
 
 ---
 
-### 5.6 The Anon Role — Lock It Down
+### 5.6 Evaluation Settings Table Policies
+
+`evaluation_settings` holds the single shared criteria list (Story 4.1). This table was missing entirely from the original plan and was added retroactively on 2026-07-06 after criteria configuration silently failed (`PGRST205: Could not find the table 'public.evaluation_settings'`) — it had never actually been created in the live project despite being documented as done.
+
+```sql
+-- Any authenticated user can read the criteria list (not sensitive — just labels)
+CREATE POLICY "evaluation_settings: authenticated read"
+ON evaluation_settings FOR SELECT
+TO authenticated
+USING (true);
+
+-- Only admins can create/update it — matches the Criteria tab being admin-only in the UI
+CREATE POLICY "evaluation_settings: admins insert"
+ON evaluation_settings FOR INSERT
+WITH CHECK (get_my_role() = 'admin');
+
+CREATE POLICY "evaluation_settings: admins update"
+ON evaluation_settings FOR UPDATE
+USING (get_my_role() = 'admin')
+WITH CHECK (get_my_role() = 'admin');
+```
+
+**Note:** the app's "save criteria" call is an `UPDATE` on a single pre-existing row (there is no per-admin criteria list, it's one shared row) — the table must be seeded with exactly one row (`INSERT INTO evaluation_settings (criteria) VALUES ('[]'::jsonb);`) or saves will silently affect 0 rows instead of erroring.
+
+---
+
+### 5.7 The Anon Role — Lock It Down
 
 By default, Supabase grants the `anon` role (unauthenticated requests) SELECT on all tables. After enabling RLS, unauthenticated requests return 0 rows — but it's better to be explicit.
 
@@ -536,6 +562,7 @@ REVOKE ALL ON profiles FROM anon;
 REVOKE ALL ON tasks FROM anon;
 REVOKE ALL ON task_progress FROM anon;
 REVOKE ALL ON evaluations FROM anon;
+REVOKE ALL ON evaluation_settings FROM anon;
 
 -- The authenticated role still gets access through RLS policies
 ```
@@ -581,6 +608,7 @@ The `average_score` column should be calculated server-side (in a Postgres funct
 | Supabase `service_role` key | Nowhere in this project | Never | Bypasses all RLS — admin-only use in Supabase dashboard |
 | Supabase MCP token | `.claude/settings.local.json` | No | Already gitignored |
 | Database password | Supabase dashboard only | Never | Never in code |
+| `ANTHROPIC_API_KEY` | Supabase Edge Function secret (`supabase secrets set`) | Never | Server-side only — Edge Functions verify caller role (mentor/admin) before calling the API, to prevent unauthenticated cost abuse |
 
 **Verify `.gitignore` before first commit:**
 ```

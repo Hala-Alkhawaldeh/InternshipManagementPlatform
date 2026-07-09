@@ -50,16 +50,27 @@ export const evaluationsService = {
     const averageScore =
       payload.scores.reduce((sum, s) => sum + s.score, 0) / payload.scores.length
 
-    return await supabase
+    const row = {
+      trainee_id: payload.traineeId,
+      mentor_id: payload.mentorId,
+      criteria: payload.criteria as unknown as Json,
+      scores: payload.scores as unknown as Json,
+      average_score: Math.round(averageScore * 100) / 100,
+    }
+
+    // No unique constraint on trainee_id to rely on for upsert's onConflict —
+    // look up any existing evaluation for this trainee and update it by id,
+    // so resubmitting edits the same row instead of inserting a duplicate.
+    const { data: existing } = await supabase
       .from('evaluations')
-      .upsert({
-        trainee_id: payload.traineeId,
-        mentor_id: payload.mentorId,
-        criteria: payload.criteria as unknown as Json,
-        scores: payload.scores as unknown as Json,
-        average_score: Math.round(averageScore * 100) / 100,
-      })
-      .select()
-      .single()
+      .select('id')
+      .eq('trainee_id', payload.traineeId)
+      .maybeSingle()
+
+    if (existing) {
+      return await supabase.from('evaluations').update(row).eq('id', existing.id).select().single()
+    }
+
+    return await supabase.from('evaluations').insert(row).select().single()
   },
 }

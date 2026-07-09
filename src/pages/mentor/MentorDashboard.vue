@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useAutoAnimate } from '@formkit/auto-animate/vue'
-import { Plus, ArrowLeft, CheckSquare, Clock, AlertCircle } from 'lucide-vue-next'
+import { Plus, ArrowLeft, CheckSquare, Clock, AlertCircle } from '@/lib/icons'
 import TaskCard from '@/components/tasks/TaskCard.vue'
 import EmptyState from '@/components/ui/EmptyState.vue'
 import { useTasks } from '@/composables/useTasks'
@@ -73,9 +73,8 @@ function initials(name: string) {
 }
 
 const trackHex: Record<Track, string> = {
-  [Track.Frontend]: '#6366f1', [Track.DevOps]: '#f97316', [Track.Python]: '#ca8a04',
-  [Track.QA]: '#0d9488', [Track.TypeScript]: '#3b82f6', [Track.Performance]: '#a855f7',
-  [Track.Security]: '#ef4444',
+  [Track.Frontend]: '#6366f1', [Track.Backend]: '#3b82f6',
+  [Track.QA]: '#0d9488', [Track.DevOps]: '#f97316',
 }
 
 function avatarBg(profile: Profile) {
@@ -234,10 +233,9 @@ const [taskListRef] = useAutoAnimate<HTMLElement>()
         </div>
       </template>
     </div>
-  </div>
 
-  <!-- ── NEW TASK DIALOG ────────────────────────────────── -->
-  <Teleport to="body">
+    <!-- ── NEW TASK DIALOG ────────────────────────────────── -->
+    <Teleport to="body">
     <Transition name="dialog-backdrop">
       <div
         v-if="showNewTask"
@@ -286,6 +284,7 @@ const [taskListRef] = useAutoAnimate<HTMLElement>()
       </div>
     </Transition>
   </Teleport>
+  </div>
 </template>
 
 <style scoped>

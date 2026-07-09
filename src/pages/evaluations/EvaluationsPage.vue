@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { Plus, Trash2, ChevronUp, ChevronDown, ChevronRight } from 'lucide-vue-next'
+import { Plus, Trash2, ChevronUp, ChevronDown, ChevronRight } from '@/lib/icons'
 import { useEvaluations } from '@/composables/useEvaluations'
 import { useProfiles } from '@/composables/useProfiles'
 import { useAuthStore } from '@/stores/auth.store'
@@ -188,14 +188,16 @@ onMounted(async () => {
               <h2 class="text-gray-900 font-semibold text-base">Evaluation Criteria</h2>
               <p class="text-gray-400 text-sm mt-0.5">Define what mentors will score trainees on (0–7 each)</p>
             </div>
-            <button
-              v-if="criteriaChanged"
-              :disabled="loading"
-              class="flex items-center gap-1.5 bg-[#0c0e12] text-white text-sm font-medium px-3.5 py-2 rounded-lg hover:bg-[#1a1d24] transition-colors disabled:opacity-50"
-              @click="handleSaveCriteria"
-            >
-              {{ loading ? 'Saving…' : 'Save Changes' }}
-            </button>
+            <div class="flex items-center gap-2">
+              <button
+                v-if="criteriaChanged"
+                :disabled="loading"
+                class="flex items-center gap-1.5 bg-[#0c0e12] text-white text-sm font-medium px-3.5 py-2 rounded-lg hover:bg-[#1a1d24] transition-colors disabled:opacity-50"
+                @click="handleSaveCriteria"
+              >
+                {{ loading ? 'Saving…' : 'Save Changes' }}
+              </button>
+            </div>
           </div>
 
           <!-- Empty state -->

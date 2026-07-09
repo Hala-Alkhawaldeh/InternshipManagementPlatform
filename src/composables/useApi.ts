@@ -21,6 +21,7 @@ function mapError(error: unknown): AppError {
       invalid_credentials: 'Incorrect email or password.',
       email_taken: 'This email is already registered.',
       user_not_found: 'User not found.',
+      email_not_confirmed: 'This account needs email confirmation before it can log in. Contact your admin.',
     }
 
     return {

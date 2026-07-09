@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store'
+import { authService } from '@/services/auth.service'
+import { profilesService } from '@/services/profiles.service'
+import type { Profile } from '@/types/app.types'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -57,7 +60,29 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to) => {
+// Restores session + profile from Supabase before the first navigation resolves,
+// so the guard below never runs against a not-yet-hydrated auth store. Without
+// this, a hard refresh races App.vue's session restore against this guard and
+// can misroute an authenticated user to the trainee dashboard by default.
+let authReady: Promise<void> | null = null
+
+function restoreAuth(): Promise<void> {
+  const authStore = useAuthStore()
+
+  return (async () => {
+    const { data } = await authService.getSession()
+    if (!data.session) return
+
+    authStore.setSession(data.session)
+    const { data: profile } = await profilesService.getMyProfile()
+    if (profile) authStore.setProfile(profile as Profile)
+  })()
+}
+
+router.beforeEach(async (to) => {
+  authReady ??= restoreAuth()
+  await authReady
+
   const authStore = useAuthStore()
 
   // Not authenticated → send to login
