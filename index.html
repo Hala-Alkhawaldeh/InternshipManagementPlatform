@@ -2,6 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!--
+      frame-ancestors is deliberately omitted: the CSP spec disallows it in a
+      <meta> tag (browsers silently ignore it there) — it only works via an
+      HTTP header, which needs a deploy host to configure. Add it there once
+      one's chosen.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self';"
+    />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Internal platform for managing Sitech's internship program — tasks, mentorship, and end-of-program evaluations." />

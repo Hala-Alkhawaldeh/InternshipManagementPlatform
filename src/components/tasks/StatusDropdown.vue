@@ -7,6 +7,10 @@ const props = defineProps<{
   progressId: string
   isMentor: boolean
   loading?: boolean
+  // Task title, so each dropdown gets a distinct accessible name — a page can
+  // render many of these at once (one per task card) and a generic label
+  // wouldn't let screen-reader users tell them apart.
+  label?: string
 }>()
 
 const emit = defineEmits<{
@@ -37,6 +41,7 @@ function onChange(e: Event) {
     v-else
     :value="currentStatus"
     :disabled="loading"
+    :aria-label="label ? `Status for ${label}` : 'Task status'"
     :class="['text-[11px] font-semibold px-2.5 py-1 rounded-full border-0 outline-none cursor-pointer appearance-none transition-all duration-200 disabled:opacity-50', TaskStatusColor[currentStatus]]"
     @change="onChange"
   >

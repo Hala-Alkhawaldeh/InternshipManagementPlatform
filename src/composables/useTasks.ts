@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { shallowRef, computed } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useToast } from '@/composables/useToast'
 import { tasksService } from '@/services/tasks.service'
@@ -9,7 +9,10 @@ export function useTasks() {
   const { execute, loading } = useApi()
   const { toast } = useToast()
 
-  const tasks = ref<TaskWithProgress[]>([])
+  // shallowRef — always replaced wholesale on fetch; updateStatus below
+  // replaces the array immutably too, so shallow tracking is enough here
+  // and Vue doesn't have to deep-proxy every task/progress row.
+  const tasks = shallowRef<TaskWithProgress[]>([])
 
   const completionPercentage = computed(() => {
     if (!tasks.value.length) return 0
@@ -59,9 +62,14 @@ export function useTasks() {
     const result = await execute(() => tasksService.updateTaskStatus(taskProgressId, status))
 
     if (result.data) {
-      // Optimistic local update — no refetch needed
-      const task = tasks.value.find(t => t.progress[0]?.id === taskProgressId)
-      if (task?.progress[0]) task.progress[0].status = status
+      // Optimistic local update, done immutably — replaces the array and the
+      // touched task/progress objects rather than mutating in place, so the
+      // shallowRef above still picks it up.
+      tasks.value = tasks.value.map(t =>
+        t.progress[0]?.id === taskProgressId
+          ? { ...t, progress: [{ ...t.progress[0], status }, ...t.progress.slice(1)] }
+          : t,
+      )
 
       toast({
         title: 'Status updated',

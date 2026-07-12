@@ -83,6 +83,7 @@ function formatDateShort(iso: string) {
             :progress-id="task.progress[0].id"
             :is-mentor="isMentor"
             :loading="updating"
+            :label="task.title"
             @change="handleStatusChange"
           />
           <span
@@ -174,6 +175,7 @@ function formatDateShort(iso: string) {
                 :progress-id="task.progress[0].id"
                 :is-mentor="isMentor"
                 :loading="updating"
+                :label="task.title"
                 @change="handleStatusChange"
               />
               <span

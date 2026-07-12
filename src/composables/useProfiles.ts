@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { shallowRef } from 'vue'
 import { useApi } from '@/composables/useApi'
 import { useAuthStore } from '@/stores/auth.store'
 import { profilesService } from '@/services/profiles.service'
@@ -8,9 +8,11 @@ export function useProfiles() {
   const { execute, loading } = useApi()
   const authStore = useAuthStore()
 
-  const mentors = ref<Profile[]>([])
-  const trainees = ref<Profile[]>([])
-  const myTrainees = ref<Profile[]>([])
+  // shallowRef — these lists are always replaced wholesale on fetch, never
+  // mutated in place, so there's no need for Vue to deep-proxy every profile.
+  const mentors = shallowRef<Profile[]>([])
+  const trainees = shallowRef<Profile[]>([])
+  const myTrainees = shallowRef<Profile[]>([])
 
   async function fetchMentors() {
     const result = await execute<Profile[]>(() => profilesService.getMentors())

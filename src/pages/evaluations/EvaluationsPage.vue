@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { Plus, Trash2, ChevronUp, ChevronDown, ChevronRight } from '@/lib/icons'
+import { Plus, Trash2, ChevronUp, ChevronDown, ChevronRight, Sparkles, X } from '@/lib/icons'
 import { useEvaluations } from '@/composables/useEvaluations'
 import { useProfiles } from '@/composables/useProfiles'
 import { useAuthStore } from '@/stores/auth.store'
@@ -8,7 +8,11 @@ import { Track, TrackLabel, TrackColor } from '@/enums/tracks.enum'
 import type { EvaluationCriterion, EvaluationScore, Profile, Evaluation } from '@/types/app.types'
 
 const authStore = useAuthStore()
-const { criteria, evaluations, currentEvaluation, loading, fetchCriteria, saveCriteria, fetchAllEvaluations, fetchEvaluationForTrainee, submitEvaluation } = useEvaluations()
+const {
+  criteria, evaluations, currentEvaluation, suggestedCriteria, suggestionSource, suggestingCriteria, loading,
+  fetchCriteria, saveCriteria, suggestCriteria, dismissSuggestion,
+  fetchAllEvaluations, fetchEvaluationForTrainee, submitEvaluation,
+} = useEvaluations()
 const { myTrainees, trainees: allTrainees, fetchMyTrainees, fetchTrainees } = useProfiles()
 
 const isAdmin = computed(() => authStore.isAdmin)
@@ -27,16 +31,29 @@ function initDraft() {
   criteriaChanged.value = false
 }
 
-function addCriterion() {
-  const name = newCriterionName.value.trim()
-  if (!name) return
+function pushCriterion(name: string) {
   draftCriteria.value.push({
     id: crypto.randomUUID(),
     name,
     order: draftCriteria.value.length,
   })
-  newCriterionName.value = ''
   criteriaChanged.value = true
+}
+
+function addCriterion() {
+  const name = newCriterionName.value.trim()
+  if (!name) return
+  pushCriterion(name)
+  newCriterionName.value = ''
+}
+
+function addSuggestion(name: string) {
+  pushCriterion(name)
+  dismissSuggestion(name)
+}
+
+function handleSuggestCriteria() {
+  suggestCriteria(draftCriteria.value.map((c) => c.name))
 }
 
 function removeCriterion(index: number) {
@@ -190,6 +207,14 @@ onMounted(async () => {
             </div>
             <div class="flex items-center gap-2">
               <button
+                :disabled="suggestingCriteria"
+                class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:border-indigo-300 hover:text-indigo-600 transition-colors disabled:opacity-50"
+                @click="handleSuggestCriteria"
+              >
+                <Sparkles :size="14" />
+                {{ suggestingCriteria ? 'Thinking…' : 'Suggest Criteria' }}
+              </button>
+              <button
                 v-if="criteriaChanged"
                 :disabled="loading"
                 class="flex items-center gap-1.5 bg-[#0c0e12] text-white text-sm font-medium px-3.5 py-2 rounded-lg hover:bg-[#1a1d24] transition-colors disabled:opacity-50"
@@ -243,6 +268,50 @@ onMounted(async () => {
             >
               <Plus :size="14" /> Add
             </button>
+          </div>
+        </div>
+
+        <!-- AI suggestions — box under the criteria card -->
+        <div
+          v-if="suggestingCriteria || suggestedCriteria.length"
+          class="bg-indigo-50/60 border border-dashed border-indigo-200 rounded-2xl p-5 mt-4"
+        >
+          <div class="mb-3">
+            <p class="flex items-center gap-1.5 text-indigo-700 text-sm font-semibold">
+              <Sparkles :size="14" />
+              {{ suggestionSource === 'static' ? 'Suggested Criteria' : 'AI Suggestions' }}
+            </p>
+            <p v-if="suggestionSource === 'static'" class="text-indigo-400 text-xs mt-0.5">
+              AI generation is unavailable right now — showing common starting points instead.
+            </p>
+          </div>
+
+          <div v-if="suggestingCriteria" class="space-y-2">
+            <div v-for="i in 3" :key="i" class="h-9 rounded-lg bg-white/70 animate-pulse" />
+          </div>
+
+          <div v-else class="space-y-2">
+            <div
+              v-for="name in suggestedCriteria"
+              :key="name"
+              class="flex items-center gap-3 bg-white rounded-lg px-3.5 py-2.5 border border-indigo-100"
+            >
+              <span class="flex-1 text-gray-800 text-sm font-medium">{{ name }}</span>
+              <button
+                class="p-1 rounded text-indigo-400 hover:text-indigo-700 transition-colors"
+                title="Add to criteria list"
+                @click="addSuggestion(name)"
+              >
+                <Plus :size="15" />
+              </button>
+              <button
+                class="p-1 rounded text-gray-300 hover:text-rose-500 transition-colors"
+                title="Dismiss"
+                @click="dismissSuggestion(name)"
+              >
+                <X :size="14" />
+              </button>
+            </div>
           </div>
         </div>
       </div>

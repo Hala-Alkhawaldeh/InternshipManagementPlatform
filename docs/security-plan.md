@@ -151,6 +151,7 @@ Validate all user input at the component level. This is not security-critical (R
 | Task Title | Non-empty, max 200 chars |
 | Evaluation Score | Integer, 0–7 inclusive |
 | Criterion Name | Non-empty, max 150 chars |
+| Temporary Password (admin-set) | Min 8 chars, plus at least one uppercase, one lowercase, one number, one special character — see `src/lib/password.ts`. Submit is disabled until all five are met; the live checklist is `PasswordRequirements.vue`. |
 
 ```typescript
 // Score validation — enforce at the input level

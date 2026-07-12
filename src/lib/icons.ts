@@ -23,3 +23,5 @@ export { default as ChevronDown } from 'lucide-vue-next/dist/esm/icons/chevron-d
 export { default as Trash2 } from 'lucide-vue-next/dist/esm/icons/trash-2.js'
 export { default as ChevronUp } from 'lucide-vue-next/dist/esm/icons/chevron-up.js'
 export { default as ChevronRight } from 'lucide-vue-next/dist/esm/icons/chevron-right.js'
+export { default as Check } from 'lucide-vue-next/dist/esm/icons/check.js'
+export { default as Sparkles } from 'lucide-vue-next/dist/esm/icons/sparkles.js'
